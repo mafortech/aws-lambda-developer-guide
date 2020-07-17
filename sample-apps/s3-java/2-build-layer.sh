@@ -1,4 +1,5 @@
 #!/bin/bash
 set -eo pipefail
-gradle -q packageLibs
-mv build/distributions/s3-java.zip build/s3-java-lib.zip
+mvn clean package -DskipTests
+mkdir build
+mv target/s3-java-1.0-SNAPSHOT.jar build/s3-java-lib.zip

@@ -1,7 +1,7 @@
 {
     "Records": [
         {
-            "awsRegion": "us-east-2",
+            "awsRegion": "eu-west-1",
             "eventName": "ObjectCreated:Put",
             "eventSource": "aws:s3",
             "eventTime": "2020-03-08T00:30:12.456Z",

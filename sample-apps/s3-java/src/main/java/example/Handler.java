@@ -40,12 +40,13 @@ public class Handler implements RequestHandler<S3Event, String> {
   private final String JPG_MIME = (String) "image/jpeg";
   private final String PNG_TYPE = (String) "png";
   private final String PNG_MIME = (String) "image/png";
+
   @Override
   public String handleRequest(S3Event s3event, Context context) {
     try {
       logger.info("EVENT: " + gson.toJson(s3event));
       S3EventNotificationRecord record = s3event.getRecords().get(0);
-      
+
       String srcBucket = record.getS3().getBucket().getName();
 
       // Object key may have spaces or unicode non-ASCII characters.
@@ -57,13 +58,13 @@ public class Handler implements RequestHandler<S3Event, String> {
       // Infer the image type.
       Matcher matcher = Pattern.compile(".*\\.([^\\.]*)").matcher(srcKey);
       if (!matcher.matches()) {
-          logger.info("Unable to infer image type for key " + srcKey);
-          return "";
+        logger.info("Unable to infer image type for key " + srcKey);
+        return "";
       }
       String imageType = matcher.group(1);
       if (!(JPG_TYPE.equals(imageType)) && !(PNG_TYPE.equals(imageType))) {
-          logger.info("Skipping non-image " + srcKey);
-          return "";
+        logger.info("Skipping non-image " + srcKey);
+        return "";
       }
 
       // Download the image from S3 into a stream
@@ -103,19 +104,17 @@ public class Handler implements RequestHandler<S3Event, String> {
       ObjectMetadata meta = new ObjectMetadata();
       meta.setContentLength(os.size());
       if (JPG_TYPE.equals(imageType)) {
-          meta.setContentType(JPG_MIME);
+        meta.setContentType(JPG_MIME);
       }
       if (PNG_TYPE.equals(imageType)) {
-          meta.setContentType(PNG_MIME);
+        meta.setContentType(PNG_MIME);
       }
 
       // Uploading to S3 destination bucket
       logger.info("Writing to: " + dstBucket + "/" + dstKey);
       try {
         s3Client.putObject(dstBucket, dstKey, is, meta);
-      }
-      catch(AmazonServiceException e)
-      {
+      } catch (AmazonServiceException e) {
         logger.error(e.getErrorMessage());
         System.exit(1);
       }

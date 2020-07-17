@@ -24,7 +24,7 @@ public class TestContext implements Context{
     return new String("$LATEST");
   }
   public String getInvokedFunctionArn(){
-    return new String("arn:aws:lambda:us-east-2:123456789012:function:my-function");
+    return new String("arn:aws:lambda:eu-west-1:123456789012:function:my-function");
   }
   public CognitoIdentity getIdentity(){
     return null;
